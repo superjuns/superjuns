@@ -266,7 +266,7 @@
         .correct { color: #00b894; background: #e0ffe6; }
         .wrong { color: #d63031; background: #ffe0e0; }
 
-        /* 排行榜区域 */
+        /* 排行榜区域 - 两行显示前10名 */
         .rank-footer {
             margin-top: 20px;
             background: rgba(255, 248, 235, 0.95);
@@ -298,7 +298,13 @@
             cursor: pointer;
             color: #b38f5a;
         }
-        .rank-items {
+        /* 两行容器 */
+        .rank-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .rank-row {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 6px;
@@ -480,14 +486,15 @@
 
     <div class="result" id="result"></div>
 
-    <!-- 排行榜区块（每个学生只显示最好成绩） -->
+    <!-- 排行榜区块：两行显示前10名 -->
     <div class="rank-footer" id="rankFooter">
         <div class="rank-header">
-            <div class="rank-title"><i class="fas fa-trophy"></i> 学霸榜 · 前5名（每人最好成绩）</div>
+            <div class="rank-title"><i class="fas fa-trophy"></i> 学霸榜 · 前10名（每人最好成绩）</div>
             <div class="rank-refresh" id="rankRefreshBtn"><i class="fas fa-sync-alt"></i> 刷新</div>
         </div>
-        <div class="rank-items" id="rankItems">
-            <div class="rank-empty">✨ 加载中...</div>
+        <div class="rank-rows" id="rankRows">
+            <div class="rank-row" id="rankRow1"></div>
+            <div class="rank-row" id="rankRow2"></div>
         </div>
     </div>
 
@@ -640,7 +647,7 @@
 
     // 图形数量范围 3-50
     function generateRandomGame() {
-        totalShapes = Math.floor(Math.random() * 48) + 3;  // 3 ~ 50
+        totalShapes = Math.floor(Math.random() * 48) + 3;
         const randomIndex = Math.floor(Math.random() * shapeTypes.length);
         currentShape = shapeTypes[randomIndex];
     }
@@ -678,12 +685,11 @@
         }, 1000);
     }
 
-    // ========= 排行榜：每个学生（班级+姓名）只保留最好成绩 =========
+    // ========= 排行榜：每个学生只保留最好成绩，显示前10名分两行 =========
     const RANK_API_URL = 'https://quickform.cn/api/zdtp3mphzo/all';
     let rankRefreshInterval = null;
-    let currentRankingList = [];   // 存储聚合后的最佳成绩列表
+    let currentRankingList = [];
 
-    // 获取原始数据，并按学生聚合最佳成绩（正确数优先，相同时用时更短）
     async function fetchRankingData() {
         try {
             const controller = new AbortController();
@@ -721,43 +727,70 @@
         }
     }
 
-    // 刷新排行榜显示（只显示前5名最佳成绩）
+    // 渲染排行榜：两行，第一行1-5名，第二行6-10名
+    function renderRankingRows(rankList) {
+        const row1Container = document.getElementById('rankRow1');
+        const row2Container = document.getElementById('rankRow2');
+        if (!row1Container || !row2Container) return;
+        
+        if (!rankList || rankList.length === 0) {
+            row1Container.innerHTML = '<div class="rank-empty">✨ 暂无学霸数据，快去挑战吧 ✨</div>';
+            row2Container.innerHTML = '';
+            return;
+        }
+        
+        const top5 = rankList.slice(0, 5);
+        const next5 = rankList.slice(5, 10);
+        
+        // 渲染第一行（1-5名）
+        if (top5.length === 0) {
+            row1Container.innerHTML = '<div class="rank-empty">暂无数据</div>';
+        } else {
+            row1Container.innerHTML = top5.map((item, idx) => {
+                const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}`));
+                const displayName = item.studentName.length > 8 ? item.studentName.slice(0,6)+'..' : item.studentName;
+                return `
+                    <div class="rank-card">
+                        <div class="rank-medal">${medal}</div>
+                        <div class="rank-name" title="${item.studentName}">${displayName}</div>
+                        <div class="rank-class">${item.className}</div>
+                        <div class="rank-correct">✅ ${item.correct}/5</div>
+                        <div class="rank-time">⏱️ ${item.totalTime}s</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 渲染第二行（6-10名）
+        if (next5.length === 0) {
+            row2Container.innerHTML = '<div class="rank-empty">暂无更多数据</div>';
+        } else {
+            row2Container.innerHTML = next5.map((item, idx) => {
+                const rankNum = idx + 6;
+                const medal = `${rankNum}`;
+                const displayName = item.studentName.length > 8 ? item.studentName.slice(0,6)+'..' : item.studentName;
+                return `
+                    <div class="rank-card">
+                        <div class="rank-medal">${medal}</div>
+                        <div class="rank-name" title="${item.studentName}">${displayName}</div>
+                        <div class="rank-class">${item.className}</div>
+                        <div class="rank-correct">✅ ${item.correct}/5</div>
+                        <div class="rank-time">⏱️ ${item.totalTime}s</div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
     async function fetchAndUpdateRanking() {
         const rankList = await fetchRankingData();
-        const top5 = rankList.slice(0, 5);
-        renderGridRanking(top5);
-        // 更新我的成绩卡片（常驻显示）
+        renderRankingRows(rankList);
         await updateMyRankCard();
     }
 
-    function renderGridRanking(rankList) {
-        const container = document.getElementById('rankItems');
-        if (!container) return;
-        if (!rankList || rankList.length === 0) {
-            container.innerHTML = '<div class="rank-empty">✨ 暂无学霸数据，快去挑战吧 ✨</div>';
-            return;
-        }
-        let html = '';
-        rankList.forEach((item, idx) => {
-            const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}`));
-            const displayName = item.studentName.length > 8 ? item.studentName.slice(0,6)+'..' : item.studentName;
-            html += `
-                <div class="rank-card">
-                    <div class="rank-medal">${medal}</div>
-                    <div class="rank-name" title="${item.studentName}">${displayName}</div>
-                    <div class="rank-class">${item.className}</div>
-                    <div class="rank-correct">✅ ${item.correct}/5</div>
-                    <div class="rank-time">⏱️ ${item.totalTime}s</div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-
-    // 更新我的成绩卡片（常驻，无成绩时显示提示）
+    // 更新我的成绩卡片
     async function updateMyRankCard() {
         if (!studentName || !studentClass) {
-            // 未输入班级姓名时，显示默认提示
             myRankContent.innerHTML = `<div class="no-score">✨ 暂无成绩，快去答题模式挑战吧 ✨</div>`;
             return;
         }
@@ -790,7 +823,6 @@
                 <div class="my-rank">🏆 第 ${myRank} 名</div>
             `;
         } else {
-            // 有班级姓名但尚未有成绩记录
             myRankContent.innerHTML = `<div class="no-score">📝 暂无挑战记录，完成一次答题模式就会上榜啦！</div>`;
         }
     }
@@ -803,7 +835,7 @@
         }, 20000);
     }
 
-    // 数据上报（提交一次完整的答题模式成绩）
+    // 数据上报
     async function sendQuizResult(totalSeconds) {
         if (dataSent) return;
         if (!studentClass || !studentName) return;
@@ -823,9 +855,7 @@
             });
             if (response.ok) {
                 console.log('成绩上报成功');
-                // 上报成功后，刷新排行榜（会重新聚合每个学生的最佳成绩）
                 await fetchAndUpdateRanking();
-                // 卡片已在 fetchAndUpdateRanking 中通过 updateMyRankCard 更新
             }
         } catch (err) { console.error(err); }
         finally { dataSent = true; }
@@ -887,7 +917,6 @@
         }, 5000);
     }
 
-    // 验证答案
     function checkAnswer() {
         if (isChecking) return;
         const userNumber = getCurrentNumber();
@@ -911,7 +940,6 @@
             setTimeout(() => { isChecking = false; }, 200);
             return;
         }
-        // 普通模式反馈
         if (isCorrect) {
             resultDiv.innerHTML = '🎉 ✅ 完全正确！ 好厉害！ 🎉';
             resultDiv.className = 'result correct';
@@ -945,7 +973,6 @@
         studentClass = className + "班";
         studentName = name;
         closeModal();
-        // 输入班级姓名后立即刷新一次我的卡片（常驻显示）
         updateMyRankCard();
         startQuizModeInternal();
     }
@@ -971,7 +998,6 @@
         setTimeout(() => {
             if (resultDiv.innerHTML === '✨ 新的一轮，加油哟 ✨') resultDiv.innerHTML = '';
         }, 1500);
-        // 重置游戏后重新刷新我的卡片（保留学生信息）
         if (studentName && studentClass) {
             updateMyRankCard();
         }
@@ -1017,7 +1043,6 @@
         isQuizMode = false;
         clearTimer();
         startRankAutoRefresh();
-        // 初始显示我的卡片（无成绩状态）
         updateMyRankCard();
     };
     
