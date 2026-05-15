@@ -52,6 +52,10 @@
         .admin-btn:active {
             background: rgba(150, 150, 150, 0.5);
         }
+        .admin-btn.active {
+            background: #ffaa66;
+            color: white;
+        }
 
         .title {
             font-size: clamp(28px, 8vw, 42px);
@@ -147,80 +151,33 @@
             box-shadow: inset 0 0 0 2px #fff8, inset 0 0 0 5px #ffe5b4, 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* ========== 所有图形统一样式 ========== */
+        /* 图形样式 */
         .shape {
             display: inline-block;
             box-shadow: 0 4px 6px #0002;
         }
-        /* 圆形 */
-        .circle {
-            background: #6c5ce7;
-            border-radius: 50%;
-        }
-        /* 正方形 */
-        .square {
-            background: #fdcb6e;
-            border-radius: 12px;
-        }
-        /* 三角形 */
-        .triangle {
-            width: 0;
-            height: 0;
-            background: transparent;
-            box-shadow: none;
-        }
-        /* 星形 */
-        .star {
-            background: #fd79a8;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        /* 心形 */
-        .heart {
-            background: #ff6b6b;
-            clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
-        }
-        /* 菱形 */
-        .diamond {
-            background: #4ecdc4;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        }
-        /* 五边形 */
-        .pentagon {
-            background: #f9ca24;
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-        }
-        /* 六边形 */
-        .hexagon {
-            background: #48dbfb;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-        }
-        /* 云朵 */
+        .circle { background: #6c5ce7; border-radius: 50%; }
+        .square { background: #fdcb6e; border-radius: 12px; }
+        .triangle { width: 0; height: 0; background: transparent; box-shadow: none; }
+        .star { background: #fd79a8; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .heart { background: #ff6b6b; clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"); }
+        .diamond { background: #4ecdc4; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .pentagon { background: #f9ca24; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
+        .hexagon { background: #48dbfb; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
         .cloud {
             background: #dfe6e9;
             border-radius: 50%;
             position: relative;
             box-shadow: none;
         }
-        .cloud::before,
-        .cloud::after {
+        .cloud::before, .cloud::after {
             content: '';
             position: absolute;
             background: #dfe6e9;
             border-radius: 50%;
         }
-        .cloud::before {
-            width: 70%;
-            height: 70%;
-            top: -35%;
-            left: 10%;
-        }
-        .cloud::after {
-            width: 50%;
-            height: 50%;
-            top: -25%;
-            right: 10%;
-        }
-        /* 月亮 */
+        .cloud::before { width: 70%; height: 70%; top: -35%; left: 10%; }
+        .cloud::after { width: 50%; height: 50%; top: -25%; right: 10%; }
         .moon {
             background: #feca57;
             border-radius: 50%;
@@ -354,14 +311,31 @@
             border-radius: 32px;
             padding: 10px 8px;
         }
+        .rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 6px 8px 6px;
+            margin-bottom: 4px;
+            border-bottom: 2px solid #ffebcd;
+        }
         .rank-title {
             font-size: 0.9rem;
             font-weight: bold;
             color: #c9975a;
-            text-align: center;
-            padding-bottom: 8px;
-            margin-bottom: 8px;
-            border-bottom: 2px solid #ffebcd;
+        }
+        .refresh-rank {
+            background: transparent;
+            border: none;
+            font-size: 0.8rem;
+            color: #b38f5a;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 30px;
+            transition: 0.1s;
+        }
+        .refresh-rank:active {
+            background: #ffe0b5;
         }
         .rank-rows {
             display: flex;
@@ -516,7 +490,10 @@
     <div class="keypad-grid" id="keypadGrid"></div>
     <div class="result" id="result"></div>
     <div class="rank-single" id="rankContainer">
-        <div class="rank-title" id="rankTitle">⚡ 竞速榜 (前10名 · 用时)</div>
+        <div class="rank-header">
+            <div class="rank-title" id="rankTitle">⚡ 竞速榜</div>
+            <button class="refresh-rank" id="refreshRankBtn"><i class="fas fa-sync-alt"></i> 刷新</button>
+        </div>
         <div id="rankListContainer"></div>
     </div>
     <div class="my-rank-card" id="myRankCard">
@@ -566,7 +543,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <script>
-    // ========== 图形种类数组（增加了多种样式）==========
+    // ========== 图形种类 ==========
     let shapeTypes = [
         'circle', 'triangle', 'square', 'star', 
         'heart', 'diamond', 'pentagon', 'hexagon', 'cloud', 'moon'
@@ -619,8 +596,9 @@
     const closeAdminModalBtn = document.getElementById('closeAdminModalBtn');
     const confirmAdminBtn = document.getElementById('confirmAdminBtn');
     const adminPassword = document.getElementById('adminPassword');
+    const refreshRankBtn = document.getElementById('refreshRankBtn');
     
-    // ========== 图形尺寸动态调整（包含云朵特殊处理）==========
+    // ========== 图形生成 ==========
     function getDynamicSize() {
         let size = 44, gap = 12;
         if (colsPerRow === 10) { size = 28; gap = 5; }
@@ -633,16 +611,13 @@
         return { size, gap };
     }
     
-    // 创建单个图形的DOM元素，根据不同形状设置不同样式
     function createShapeElement(shapeType, size) {
         const div = document.createElement('div');
         div.classList.add('shape', shapeType);
-        // 对于非三角形，设置宽高
         if (shapeType !== 'triangle') {
             div.style.width = `${size}px`;
             div.style.height = `${size}px`;
         }
-        // 特殊处理三角形（需要border）
         if (shapeType === 'triangle') {
             div.style.width = '0';
             div.style.height = '0';
@@ -652,48 +627,6 @@
             div.style.background = 'transparent';
             div.style.boxShadow = 'none';
         }
-        // 特殊处理云朵（需要伪元素，用额外样式）
-        if (shapeType === 'cloud') {
-            div.style.position = 'relative';
-            div.style.background = '#dfe6e9';
-            div.style.borderRadius = '50%';
-            // 清除原有的伪元素（确保每次新建时正确）
-            div.innerHTML = '';
-            div.style.setProperty('--cloud-size', `${size}px`);
-            // 使用JavaScript动态添加伪元素样式
-            const styleId = `cloud-style-${Date.now()}-${Math.random()}`;
-            if (!document.getElementById('cloud-dynamic-style')) {
-                const style = document.createElement('style');
-                style.id = 'cloud-dynamic-style';
-                document.head.appendChild(style);
-            }
-            const styleSheet = document.getElementById('cloud-dynamic-style');
-            styleSheet.innerHTML = `
-                .cloud {
-                    position: relative;
-                    background: #dfe6e9;
-                }
-                .cloud::before, .cloud::after {
-                    content: '';
-                    position: absolute;
-                    background: #dfe6e9;
-                    border-radius: 50%;
-                }
-                .cloud::before {
-                    width: 70%;
-                    height: 70%;
-                    top: -35%;
-                    left: 10%;
-                }
-                .cloud::after {
-                    width: 50%;
-                    height: 50%;
-                    top: -25%;
-                    right: 10%;
-                }
-            `;
-        }
-        // 特殊处理月亮
         if (shapeType === 'moon') {
             div.style.background = '#feca57';
             div.style.borderRadius = '50%';
@@ -959,7 +892,7 @@
         setTimeout(() => { if (resultDiv.innerHTML.includes('每行')) resultDiv.innerHTML = ''; }, 1000);
     }
     
-    // ========== 排行榜相关 ==========
+    // ========== 排行榜核心：竞速榜先按正确率再按用时 ==========
     function isValidName(name) {
         if (!name || typeof name !== 'string') return false;
         const trimmed = name.trim();
@@ -984,14 +917,16 @@
                     bestMap.set(key, { className, studentName, correct, time: timeSec });
                 } else {
                     const existing = bestMap.get(key);
-                    if (timeSec < existing.time) {
-                        bestMap.set(key, { className, studentName, correct, time: timeSec });
-                    } else if (timeSec === existing.time && correct > existing.correct) {
+                    if (correct > existing.correct || (correct === existing.correct && timeSec < existing.time)) {
                         bestMap.set(key, { className, studentName, correct, time: timeSec });
                     }
                 }
             });
-            let rankList = Array.from(bestMap.values()).sort((a,b) => a.time - b.time);
+            // 排序：先按正确数降序，再按用时升序
+            let rankList = Array.from(bestMap.values()).sort((a,b) => {
+                if (a.correct !== b.correct) return b.correct - a.correct;
+                return a.time - b.time;
+            });
             rankList = rankList.filter(item => !hiddenMembers.has(`${item.className}|${item.studentName}`));
             return rankList.slice(0,10);
         } catch(e) { return []; }
@@ -1042,7 +977,7 @@
     }
     
     function renderSpeedRanking(rankList) {
-        rankTitle.textContent = '⚡ 竞速榜 (前10名 · 用时越短越强)';
+        rankTitle.textContent = '⚡ 竞速榜';
         if (!rankList || rankList.length === 0) {
             rankListContainer.innerHTML = '<div class="rank-rows"><div class="rank-row"><div class="rank-empty">暂无数据，快来挑战~</div></div></div>';
             return;
@@ -1058,7 +993,7 @@
                         <div class="rank-medal">${medal}</div>
                         <div class="rank-name" title="${item.studentName}">${displayName}</div>
                         <div class="rank-class">${item.className}</div>
-                        <div class="rank-score">⏱️ ${item.time}秒</div>`;
+                        <div class="rank-score">✅ ${item.correct}/5 ⏱️${item.time}s</div>`;
             if (isAdminMode) {
                 html += `<div class="delete-icon" data-class="${item.className}" data-name="${item.studentName}">❌</div>`;
             }
@@ -1072,7 +1007,7 @@
                         <div class="rank-medal">${rankNum}</div>
                         <div class="rank-name" title="${item.studentName}">${displayName}</div>
                         <div class="rank-class">${item.className}</div>
-                        <div class="rank-score">⏱️ ${item.time}秒</div>`;
+                        <div class="rank-score">✅ ${item.correct}/5 ⏱️${item.time}s</div>`;
             if (isAdminMode) {
                 html += `<div class="delete-icon" data-class="${item.className}" data-name="${item.studentName}">❌</div>`;
             }
@@ -1096,7 +1031,7 @@
     }
     
     function renderCarefulRanking(rankList) {
-        rankTitle.textContent = '🛡️ 细心榜 (前10名 · 得分越高越强)';
+        rankTitle.textContent = '🛡️ 细心榜';
         if (!rankList || rankList.length === 0) {
             rankListContainer.innerHTML = '<div class="rank-rows"><div class="rank-row"><div class="rank-empty">暂无数据，快来挑战~</div></div></div>';
             return;
@@ -1167,7 +1102,7 @@
             const contentDiv = document.getElementById('myRankContent');
             if (myRank) {
                 contentDiv.innerHTML = `<div class="my-info"><div class="my-name">${studentName}</div><div class="my-class">${studentClass}</div></div>
-                                        <div class="my-stats"><span>⚡ ${myCorrect}题 ⏱️${myTime}秒</span></div>
+                                        <div class="my-stats"><span>⚡ ${myCorrect}/5 ⏱️${myTime}s</span></div>
                                         <div class="my-rank">🏆 第 ${myRank} 名</div>`;
             } else {
                 contentDiv.innerHTML = '<div class="no-score">📝 暂无竞速记录，完成一局就会上榜啦！</div>';
@@ -1192,9 +1127,23 @@
         }
     }
     
-    // ========== 管理员模式 ==========
+    // ========== 管理员模式 (点击切换) ==========
+    function toggleAdminMode() {
+        if (isAdminMode) {
+            isAdminMode = false;
+            adminBtn.classList.remove('active');
+            resultDiv.innerHTML = '🔧 已退出管理员模式';
+            resultDiv.className = 'result correct';
+            setTimeout(() => resultDiv.innerHTML = '', 2000);
+            loadCurrentRanking();
+        } else {
+            showAdminModal();
+        }
+    }
+    
     function enterAdminMode() {
         isAdminMode = true;
+        adminBtn.classList.add('active');
         resultDiv.innerHTML = '🔧 管理员模式已开启，点击❌可隐藏成员（仅隐藏显示）';
         resultDiv.className = 'result correct';
         setTimeout(() => resultDiv.innerHTML = '', 3000);
@@ -1276,6 +1225,15 @@
         startGameLogic();
     }
     
+    // 手动刷新排行榜
+    async function refreshRanking() {
+        await loadCurrentRanking();
+        await updateMyRankCard();
+        resultDiv.innerHTML = '📊 排行榜已刷新';
+        resultDiv.className = 'result correct';
+        setTimeout(() => { if (resultDiv.innerHTML === '📊 排行榜已刷新') resultDiv.innerHTML = ''; }, 1500);
+    }
+    
     document.querySelectorAll('.mode-tab').forEach(tab => {
         tab.addEventListener('click', () => switchMode(tab.dataset.mode));
     });
@@ -1286,10 +1244,11 @@
     submitBtn.addEventListener('click', checkAnswer);
     document.getElementById('confirmBtn').addEventListener('click', confirmInfo);
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-    adminBtn.addEventListener('click', showAdminModal);
+    adminBtn.addEventListener('click', toggleAdminMode);
     confirmAdminBtn.addEventListener('click', checkAdminPassword);
     closeAdminModalBtn.addEventListener('click', closeAdminModal);
     adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdminModal(); });
+    refreshRankBtn.addEventListener('click', refreshRanking);
     
     buildKeypad();
     generateRandomGame();
