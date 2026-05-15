@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>小学数学数独 | 练习+答题模式 | 实时排行榜+个人排名卡</title>
+    <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f7ff 0%, #e9f0fa 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', 'Comic Neue', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 12px;
+        }
+
+        .game-container {
+            max-width: 850px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            padding: 16px 14px 24px;
+            transition: all 0.2s ease;
+        }
+
+        .game-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            background: #ffffffcc;
+            padding: 10px 14px;
+            border-radius: 48px;
+            backdrop-filter: blur(4px);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            flex: 2;
+        }
+
+        .ctrl-group {
+            background: #f8fbff;
+            border-radius: 40px;
+            padding: 4px 10px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            box-shadow: inset 0 1px 2px #0001, 0 2px 4px #fff8;
+        }
+
+        .ctrl-group label {
+            font-weight: 600;
+            color: #2c5a7a;
+            font-size: 0.75rem;
+        }
+
+        select, button {
+            background: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 32px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            color: #1f4e6e;
+        }
+
+        select {
+            background: #fef9e6;
+            font-size: 0.7rem;
+        }
+
+        button {
+            background: #ffe5b4;
+            color: #b45f1b;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .timer-box {
+            background: #1f2e3a;
+            padding: 5px 12px;
+            border-radius: 48px;
+            color: #c3e88d;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mode-badge {
+            background: #2e4a33;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: normal;
+            color: #e0ffc0;
+            white-space: nowrap;
+        }
+
+        .answer-mode-btn {
+            background: #4caf50;
+            color: white;
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            box-shadow: 0 2px 0 #2e6b2f;
+            white-space: nowrap;
+        }
+
+        .sudoku-grid {
+            display: flex;
+            justify-content: center;
+            margin: 12px 0 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table.sudoku-table {
+            border-collapse: collapse;
+            background: #ffffffea;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            margin: 0 auto;
+        }
+
+        .sudoku-table td {
+            border: 1px solid #bbd2e5;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 500;
+            transition: 0.05s linear;
+            cursor: pointer;
+            background-color: #fffdf7;
+            width: clamp(38px, 12vw, 58px);
+            height: clamp(38px, 12vw, 58px);
+            font-size: clamp(1.2rem, 5vw, 1.6rem);
+        }
+
+        .sudoku-table[data-size="4"] td {
+            width: clamp(50px, 15vw, 75px);
+            height: clamp(50px, 15vw, 75px);
+            font-size: clamp(1.6rem, 7vw, 2rem);
+        }
+
+        .sudoku-table td.thick-right {
+            border-right: 3px solid #5a7d9a;
+        }
+        .sudoku-table td.thick-bottom {
+            border-bottom: 3px solid #5a7d9a;
+        }
+
+        .fixed-cell {
+            color: #1e6f5c;
+            font-weight: 800;
+            background-color: #eef4fc;
+        }
+
+        .user-cell {
+            color: #2b3b4e;
+            font-weight: 600;
+        }
+
+        .conflict-cell {
+            background-color: #ffdddd !important;
+            color: #c0392b !important;
+            box-shadow: inset 0 0 0 2px #e74c3c;
+        }
+
+        .selected-cell {
+            background-color: #ffe6b3 !important;
+            box-shadow: inset 0 0 0 2px #f39c12;
+        }
+
+        .numpad {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 16px 0 10px;
+            background: #edf2f7;
+            padding: 12px 10px;
+            border-radius: 56px;
+        }
+
+        .num-btn {
+            background: #ffffff;
+            width: clamp(52px, 15vw, 70px);
+            height: clamp(52px, 15vw, 70px);
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: bold;
+            border-radius: 40px;
+            box-shadow: 0 4px 0 #b0c4de;
+            transition: 0.05s linear;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #2c3e66;
+            touch-action: manipulation;
+        }
+
+        .num-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b0c4de;
+        }
+
+        .del-btn {
+            background: #ffcfb6;
+            color: #b4420f;
+            font-size: 1.2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            background: #c7e9fb;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            border-radius: 40px;
+        }
+
+        .mode-tip {
+            text-align: center;
+            font-size: 0.7rem;
+            background: #fff3e0;
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #6c8eae;
+            margin-top: 16px;
+        }
+
+        /* 排行榜布局 - 左边排行榜 + 右侧个人卡片 */
+        .leaderboard-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 28px;
+        }
+        .leaderboard-section {
+            flex: 2;
+            min-width: 240px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 16px 12px 20px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+        }
+        .personal-rank-card {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, #fff7e8 0%, #fffae8 100%);
+            border-radius: 40px;
+            padding: 16px 14px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #ffefcf;
+            backdrop-filter: blur(4px);
+        }
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 0 6px;
+        }
+        .leaderboard-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f4870;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .refresh-lb-btn {
+            background: #d9e6f2;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1f5e8c;
+            cursor: pointer;
+        }
+        /* 横向两列布局 (四宫格和九宫格并排) */
+        .leaderboard-horizontal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+        }
+        .lb-col {
+            flex: 1;
+            min-width: 180px;
+            background: rgba(255,250,235,0.5);
+            border-radius: 28px;
+            padding: 10px 8px;
+        }
+        .lb-col-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #2c6e5c;
+            text-align: center;
+            border-bottom: 2px solid #ffd966;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+        .difficulty-group {
+            margin-bottom: 14px;
+        }
+        .difficulty-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #b45f1b;
+            background: #fff0dc;
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-bottom: 6px;
+        }
+        .rank-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .rank-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            padding: 5px 6px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .rank-number {
+            font-weight: 800;
+            width: 24px;
+            color: #f39c12;
+        }
+        .rank-info {
+            flex: 3;
+            font-weight: 500;
+            color: #2c3e66;
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+        }
+        .rank-time {
+            font-family: monospace;
+            font-weight: 700;
+            background: #eef2f5;
+            padding: 2px 6px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+        }
+        .empty-rank {
+            color: #8fadc2;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 6px;
+            font-style: italic;
+        }
+        /* 个人排名卡片样式 */
+        .personal-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #c25d0e;
+            text-align: center;
+            border-bottom: 2px solid #ffcf9a;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+        }
+        .player-info {
+            background: #ffffffcc;
+            border-radius: 32px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .player-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+        }
+        .player-label {
+            font-weight: 600;
+            color: #4a627a;
+        }
+        .player-value {
+            font-weight: 700;
+            color: #2c5a7a;
+        }
+        .rank-badge {
+            background: #ffd966;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin: 8px 0;
+            text-align: center;
+        }
+        .no-data-card {
+            text-align: center;
+            color: #8fadc2;
+            padding: 20px 10px;
+            font-size: 0.75rem;
+        }
+        @media (max-width: 680px) {
+            .leaderboard-wrapper {
+                flex-direction: column;
+            }
+            .rank-info {
+                white-space: normal;
+                word-break: break-word;
+            }
+        }
+
+        /* 模态框不变 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-dialog {
+            background: #fffef7;
+            border-radius: 48px;
+            width: 85%;
+            max-width: 320px;
+            padding: 24px 20px 28px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            animation: fadeSlide 0.2s ease;
+        }
+        @keyframes fadeSlide {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-dialog h3 {
+            font-size: 1.5rem;
+            margin: 0 0 8px 0;
+            color: #2c5a7a;
+        }
+        .modal-dialog p {
+            color: #5f7f9e;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #2c5a7a;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        .input-group select, .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            border-radius: 40px;
+            border: 1px solid #cbdbe0;
+            background: white;
+            font-family: inherit;
+            outline: none;
+            transition: 0.15s;
+        }
+        .input-group select:focus, .input-group input:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76,175,80,0.2);
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px 0;
+            font-size: 1rem;
+            border-radius: 40px;
+            background: #eef2f7;
+            color: #2c5a7a;
+            border: none;
+            font-weight: bold;
+        }
+        .modal-buttons button.confirm {
+            background: #4caf50;
+            color: white;
+            box-shadow: 0 2px 0 #2e6b2f;
+        }
+        .modal-buttons button.confirm:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="game-header">
+        <div class="controls">
+            <div class="ctrl-group">
+                <label>📐 宫格</label>
+                <select id="sizeSelect">
+                    <option value="4" selected>四宫格</option>
+                    <option value="9">九宫格</option>
+                </select>
+            </div>
+            <div class="ctrl-group">
+                <label>⭐ 难度</label>
+                <select id="difficultySelect">
+                    <option value="easy">简易</option>
+                    <option value="medium" selected>中等</option>
+                    <option value="hard">困难</option>
+                </select>
+            </div>
+            <button id="newGameBtn">✨ 新游戏</button>
+            <button id="resetBtn">🔄 重置</button>
+        </div>
+        <div class="timer-box">
+            <span id="timerDisplay">00:00</span>
+            <span id="modeBadge" class="mode-badge">📖 练习模式</span>
+            <button id="answerModeBtn" class="answer-mode-btn">🎯 答题模式</button>
+        </div>
+    </div>
+
+    <div class="sudoku-grid" id="sudokuGridContainer"></div>
+    <div class="numpad" id="numpadArea"></div>
+    <div class="action-buttons">
+        <button id="checkWinBtn" class="action-btn">🏆 检查完成</button>
+    </div>
+    <div style="text-align: center; margin-top: 5px;">
+        <span id="modeTip" class="mode-tip">✨ 练习模式：随意填写，不计时 ✨</span>
+    </div>
+
+    <!-- 排行榜区域（左侧排行榜 + 右侧个人实时卡片） -->
+    <div class="leaderboard-wrapper">
+        <div class="leaderboard-section">
+            <div class="leaderboard-header">
+                <h3>🏅 答题排行榜 <span style="font-size:0.7rem;">(答题模式)</span></h3>
+                <button id="refreshLeaderboardBtn" class="refresh-lb-btn">🔄 刷新排名</button>
+            </div>
+            <div id="leaderboardContent" class="leaderboard-horizontal">
+                <div style="text-align:center; width:100%; padding:20px;">加载排行榜...</div>
+            </div>
+        </div>
+        <!-- 玩家实时排行卡片 -->
+        <div class="personal-rank-card" id="personalRankCard">
+            <div class="personal-title">🎯 我的实时排名</div>
+            <div id="personalRankContent" style="min-height: 160px;">
+                <div class="no-data-card">暂无答题记录<br>完成答题模式后自动显示排名</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>✏️ 点击格子 & 数字按钮 | 答题模式需填写班级姓名，完成后自动上榜并显示个人排名</footer>
+</div>
+
+<!-- 自定义对话框 -->
+<div id="infoModal" class="modal-overlay">
+    <div class="modal-dialog">
+        <h3>✏️ 答题模式</h3>
+        <p>请填写个人信息后再开始挑战</p>
+        <div class="input-group">
+            <label>🏫 班级</label>
+            <select id="classSelect">
+                <option value="1">1班</option><option value="2">2班</option><option value="3">3班</option>
+                <option value="4">4班</option><option value="5">5班</option><option value="6">6班</option>
+                <option value="7">7班</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>👧 姓名</label>
+            <input type="text" id="studentNameInput" placeholder="请输入姓名" maxlength="20" autocomplete="off">
+        </div>
+        <div class="modal-buttons">
+            <button id="modalCancelBtn">取消</button>
+            <button id="modalConfirmBtn" class="confirm">开始答题</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== 游戏逻辑 ==========
+    let currentSize = 4;            // 默认四宫格
+    let currentDifficulty = "medium";
+    let solutionMatrix = [];
+    let puzzleMatrix = [];
+    let userMatrix = [];
+    let selectedRow = -1, selectedCol = -1;
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let isGameFinished = false;
+    let isAnswerModeActive = false;
+    let studentClass = null;
+    let studentName = null;
+    let lastCompletedRecord = null;   // 存储最后一次完成的记录(用于个人排名)
+
+    const sizeSelect = document.getElementById("sizeSelect");
+    const difficultySelect = document.getElementById("difficultySelect");
+    const newGameBtn = document.getElementById("newGameBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const checkWinBtn = document.getElementById("checkWinBtn");
+    const timerDisplaySpan = document.getElementById("timerDisplay");
+    const gridContainer = document.getElementById("sudokuGridContainer");
+    const answerModeBtn = document.getElementById("answerModeBtn");
+    const modeTipSpan = document.getElementById("modeTip");
+    const modeBadgeSpan = document.getElementById("modeBadge");
+    const modalOverlay = document.getElementById("infoModal");
+    const classSelect = document.getElementById("classSelect");
+    const studentNameInput = document.getElementById("studentNameInput");
+    const modalConfirmBtn = document.getElementById("modalConfirmBtn");
+    const modalCancelBtn = document.getElementById("modalCancelBtn");
+    const refreshLeaderboardBtn = document.getElementById("refreshLeaderboardBtn");
+    const personalRankContent = document.getElementById("personalRankContent");
+
+    function formatTime(sec) {
+        let mins = Math.floor(sec / 60);
+        let remainSec = sec % 60;
+        return `${mins.toString().padStart(2, '0')}:${remainSec.toString().padStart(2, '0')}`;
+    }
+
+    function stopTimer() { if (timerInterval) clearInterval(timerInterval); timerInterval = null; }
+    function startTimerIfNeeded() {
+        if (timerInterval) stopTimer();
+        if (!isGameFinished && isAnswerModeActive) {
+            timerInterval = setInterval(() => {
+                if (!isGameFinished && isAnswerModeActive) {
+                    timerSeconds++;
+                    timerDisplaySpan.innerText = formatTime(timerSeconds);
+                } else if (isGameFinished || !isAnswerModeActive) { if (timerInterval) stopTimer(); }
+            }, 1000);
+        }
+    }
+    function resetTimerDisplay() { timerSeconds = 0; timerDisplaySpan.innerText = formatTime(0); }
+    function deactivateAnswerMode(resetTime = true, keepInfo = false) {
+        if (isAnswerModeActive) {
+            isAnswerModeActive = false; stopTimer();
+            if (resetTime) resetTimerDisplay();
+            answerModeBtn.disabled = false; answerModeBtn.textContent = "🎯 答题模式";
+            modeBadgeSpan.textContent = "📖 练习模式"; modeBadgeSpan.style.background = "#2e4a33";
+            modeTipSpan.innerHTML = "✨ 练习模式：随意填写，不计时 ✨"; modeTipSpan.style.color = "#b45f1b";
+        } else {
+            answerModeBtn.disabled = false; answerModeBtn.textContent = "🎯 答题模式";
+            if (resetTime) { stopTimer(); resetTimerDisplay(); }
+            modeBadgeSpan.textContent = "📖 练习模式"; modeTipSpan.innerHTML = "✨ 练习模式：随意填写，不计时 ✨";
+        }
+        if (!keepInfo) { studentClass = null; studentName = null; }
+    }
+
+    function showInfoModal() {
+        if (isGameFinished) { modeTipSpan.innerHTML = "🏁 游戏已完成，请开始新游戏再开启答题模式"; modeTipSpan.style.color = "#c0392b"; return false; }
+        if (isAnswerModeActive) return false;
+        classSelect.value = "1"; studentNameInput.value = "";
+        modalOverlay.classList.add("active");
+        setTimeout(() => studentNameInput.focus(), 100);
+        return true;
+    }
+    function hideModal() { modalOverlay.classList.remove("active"); }
+    function confirmAnswerMode() {
+        const selectedClass = classSelect.value;
+        const name = studentNameInput.value.trim();
+        if (name === "") { alert("请填写姓名！"); studentNameInput.focus(); return; }
+        studentClass = parseInt(selectedClass); studentName = name;
+        hideModal();
+        isAnswerModeActive = true;
+        stopTimer(); resetTimerDisplay(); startTimerIfNeeded();
+        answerModeBtn.disabled = true; answerModeBtn.textContent = "⏵ 答题中...";
+        modeBadgeSpan.textContent = `⏱️ 答题模式 (${studentName} 同学)`; modeBadgeSpan.style.background = "#b45f1b";
+        modeTipSpan.innerHTML = `⚡ 答题模式已开启，计时开始！完成时自动上报成绩 (班级:${studentClass}班 姓名:${studentName}) ⚡`;
+        modeTipSpan.style.color = "#2c6e2c";
+        renderSudokuGrid();
+    }
+
+    function reportGameResult(modeType, elapsedSeconds, className, studentNameValue, size, difficulty) {
+        const gameData = {
+            gameType: "sudoku", size: size, difficulty: difficulty, mode: modeType,
+            classNumber: className, studentName: studentNameValue, timeSeconds: elapsedSeconds,
+            formattedTime: formatTime(elapsedSeconds), completedAt: new Date().toISOString(), source: "math_sudoku_game"
+        };
+        return fetch("https://quickform.cn/api/1xtadf78hw", { 
+            method: "POST", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify(gameData), 
+            mode: "cors" 
+        }).then(res => { 
+            if(res.ok) console.log("成绩上报成功"); 
+            else console.warn("上报失败");
+            return res.ok;
+        }).catch(err => console.error("上报错误", err));
+    }
+
+    // 数独核心
+    function getBoxSize(size) { return size === 4 ? 2 : 3; }
+    function isValidPlacement(board, row, col, val, size) {
+        for (let c = 0; c < size; c++) if (board[row][c] === val && c !== col) return false;
+        for (let r = 0; r < size; r++) if (board[r][col] === val && r !== row) return false;
+        const boxSize = getBoxSize(size);
+        const startRow = Math.floor(row / boxSize) * boxSize, startCol = Math.floor(col / boxSize) * boxSize;
+        for (let i = 0; i < boxSize; i++) for (let j = 0; j < boxSize; j++)
+            if (board[startRow + i][startCol + j] === val && (startRow + i !== row || startCol + j !== col)) return false;
+        return true;
+    }
+    function generateCompleteSudoku(size) {
+        const board = Array(size).fill().map(() => Array(size).fill(0));
+        const numbers = Array.from({ length: size }, (_, i) => i + 1);
+        function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+        function solve(row, col) {
+            if (row === size) return true;
+            if (col === size) return solve(row + 1, 0);
+            if (board[row][col] !== 0) return solve(row, col + 1);
+            const shuffledNums = shuffle([...numbers]);
+            for (let num of shuffledNums) {
+                if (isValidPlacement(board, row, col, num, size)) { board[row][col] = num; if (solve(row, col + 1)) return true; board[row][col] = 0; }
+            }
+            return false;
+        }
+        const firstRow = shuffle([...numbers]); for (let i = 0; i < size; i++) board[0][i] = firstRow[i];
+        if (solve(0, 0)) return board;
+        const fallback = Array(size).fill().map(() => Array(size).fill(0));
+        function fillFull(r, c) { if (r === size) return true; if (c === size) return fillFull(r+1, 0); const opts = shuffle([...numbers]); for(let v of opts) { if (isValidPlacement(fallback, r, c, v, size)) { fallback[r][c] = v; if(fillFull(r, c+1)) return true; fallback[r][c] = 0; } } return false; }
+        fillFull(0,0); return fallback;
+    }
+    function generatePuzzleByDifficulty(solution, size, difficulty) {
+        const totalCells = size * size;
+        let keepCount = size===4 ? (difficulty==="easy"?11:difficulty==="medium"?8:5) : (difficulty==="easy"?56:difficulty==="medium"?44:32);
+        keepCount = Math.min(keepCount, totalCells-4); keepCount = Math.max(keepCount, 4);
+        const positions = []; for (let i = 0; i < size; i++) for (let j = 0; j < size; j++) positions.push([i, j]);
+        for (let i = positions.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [positions[i], positions[j]] = [positions[j], positions[i]]; }
+        const puzzle = Array(size).fill().map(()=>Array(size).fill(0));
+        for (let k=0; k<keepCount; k++) { const [r,c]=positions[k]; puzzle[r][c]=solution[r][c]; }
+        return puzzle;
+    }
+    function hasConflict(row, col, val) { if (val===0) return false; const size=currentSize;
+        for (let c=0;c<size;c++) if(c!==col && userMatrix[row][c]===val) return true;
+        for (let r=0;r<size;r++) if(r!==row && userMatrix[r][col]===val) return true;
+        const boxSize=getBoxSize(size); const startRow=Math.floor(row/boxSize)*boxSize, startCol=Math.floor(col/boxSize)*boxSize;
+        for (let i=0;i<boxSize;i++) for(let j=0;j<boxSize;j++) { const rr=startRow+i, cc=startCol+j; if((rr!==row||cc!==col) && userMatrix[rr][cc]===val) return true; }
+        return false;
+    }
+    async function checkVictory() {
+        if(isGameFinished) return true;
+        for(let i=0;i<currentSize;i++) for(let j=0;j<currentSize;j++) if(userMatrix[i][j]!==solutionMatrix[i][j]) return false;
+        const completedMode = isAnswerModeActive ? "answer" : "practice";
+        const completedTime = timerSeconds;
+        const completedClass = studentClass;
+        const completedName = studentName;
+        const completedSize = currentSize;
+        const completedDifficulty = currentDifficulty;
+        
+        isGameFinished = true;
+        if(isAnswerModeActive) { stopTimer(); isAnswerModeActive = false; }
+        answerModeBtn.disabled = true; answerModeBtn.textContent = "🏆 已完成";
+        modeBadgeSpan.textContent = "🎉 胜利"; modeTipSpan.innerHTML = "🎉 恭喜完成数独！🎉"; modeTipSpan.style.color = "#1e6f5c";
+        renderSudokuGrid();
+        
+        if(completedMode === "answer" && completedClass && completedName) {
+            await reportGameResult(completedMode, completedTime, completedClass, completedName, completedSize, completedDifficulty);
+            // 记录本次完成记录用于个人排名
+            lastCompletedRecord = {
+                studentName: completedName,
+                classNumber: completedClass,
+                timeSeconds: completedTime,
+                formattedTime: formatTime(completedTime),
+                size: completedSize,
+                difficulty: completedDifficulty,
+                mode: "answer"
+            };
+            await fetchLeaderboardAndRender();  // 刷新排行榜和个人排名
+        } else if(completedMode === "answer") { 
+            await reportGameResult(completedMode, completedTime, null, null, completedSize, completedDifficulty);
+            await fetchLeaderboardAndRender();
+        } else { 
+            await fetchLeaderboardAndRender(); 
+        }
+        
+        setTimeout(() => { let msg = `🎉 太棒了！数独完成！ 🎉\n`; if(completedMode==="answer" && completedClass && completedName) msg += `班级: ${completedClass}班  姓名: ${completedName}\n⏱️ 用时: ${formatTime(completedTime)}`; else if(completedMode==="answer") msg += `用时: ${formatTime(completedTime)}`; else msg += `练习模式完成！`; alert(msg); }, 30);
+        return true;
+    }
+    function setCellValue(row,col,value) { if(isGameFinished) return false; if(puzzleMatrix[row][col]!==0) return false; if(value!==0 && (value<1||value>currentSize)) return false; userMatrix[row][col]=value; renderSudokuGrid(); checkVictory(); return true; }
+    function generateNewGame() { isGameFinished=false; const size=currentSize; solutionMatrix=generateCompleteSudoku(size); puzzleMatrix=generatePuzzleByDifficulty(solutionMatrix,size,currentDifficulty); userMatrix=puzzleMatrix.map(row=>[...row]); selectedRow=-1; selectedCol=-1; deactivateAnswerMode(true,false); renderSudokuGrid(); renderNumpad(); fetchLeaderboardAndRender(); }
+    function resetCurrentGame() { if(!puzzleMatrix.length) return; userMatrix=puzzleMatrix.map(row=>[...row]); selectedRow=-1; selectedCol=-1; isGameFinished=false; deactivateAnswerMode(true,false); renderSudokuGrid(); renderNumpad(); }
+
+    function renderSudokuGrid() { const size=currentSize; const boxSize=getBoxSize(size); const table=document.createElement("table"); table.className="sudoku-table"; table.setAttribute("data-size",size);
+        for(let i=0;i<size;i++) { const tr=document.createElement("tr"); for(let j=0;j<size;j++) { const td=document.createElement("td"); const cellValue=userMatrix[i][j]; const isFixed=(puzzleMatrix[i][j]!==0); td.textContent=cellValue===0?"":cellValue;
+            if(isFixed) td.classList.add("fixed-cell"); else if(cellValue!==0) td.classList.add("user-cell");
+            if(!isFixed && cellValue!==0 && hasConflict(i,j,cellValue)) td.classList.add("conflict-cell");
+            if(selectedRow===i && selectedCol===j) td.classList.add("selected-cell");
+            if((j+1)%boxSize===0 && j+1!==size) td.classList.add("thick-right");
+            if((i+1)%boxSize===0 && i+1!==size) td.classList.add("thick-bottom");
+            td.addEventListener("click",(function(r,c){ return function(e){ if(isGameFinished) return; selectedRow=r; selectedCol=c; renderSudokuGrid(); }; })(i,j));
+            tr.appendChild(td);
+        } table.appendChild(tr); }
+        while(gridContainer.firstChild) gridContainer.removeChild(gridContainer.firstChild); gridContainer.appendChild(table);
+    }
+    function renderNumpad() { const numpadDiv=document.getElementById("numpadArea"); numpadDiv.innerHTML=""; const size=currentSize;
+        for(let i=1;i<=size;i++){ const btn=document.createElement("div"); btn.classList.add("num-btn"); btn.textContent=i; btn.addEventListener("click",()=>{ if(isGameFinished) return; if(selectedRow!==-1 && selectedCol!==-1 && puzzleMatrix[selectedRow][selectedCol]===0) setCellValue(selectedRow,selectedCol,i); }); numpadDiv.appendChild(btn); }
+        const delBtn=document.createElement("div"); delBtn.classList.add("num-btn","del-btn"); delBtn.textContent="⌫"; delBtn.addEventListener("click",()=>{ if(isGameFinished) return; if(selectedRow!==-1 && selectedCol!==-1 && puzzleMatrix[selectedRow][selectedCol]===0) setCellValue(selectedRow,selectedCol,0); }); numpadDiv.appendChild(delBtn);
+    }
+    function onKeyDown(e){ if(isGameFinished) return; if(selectedRow===-1||selectedCol===-1) return; if(puzzleMatrix[selectedRow][selectedCol]!==0) return; const key=e.key; const num=parseInt(key); if(!isNaN(num)&&num>=1&&num<=currentSize){ e.preventDefault(); setCellValue(selectedRow,selectedCol,num); } else if(key==="Backspace"||key==="Delete"||key==="0"){ e.preventDefault(); setCellValue(selectedRow,selectedCol,0); } else if(key==="ArrowUp"&&selectedRow>0){ selectedRow--; renderSudokuGrid(); } else if(key==="ArrowDown"&&selectedRow<currentSize-1){ selectedRow++; renderSudokuGrid(); } else if(key==="ArrowLeft"&&selectedCol>0){ selectedCol--; renderSudokuGrid(); } else if(key==="ArrowRight"&&selectedCol<currentSize-1){ selectedCol++; renderSudokuGrid(); } }
+    function onSettingsChange(){ currentSize=parseInt(sizeSelect.value); currentDifficulty=difficultySelect.value; generateNewGame(); }
+
+    // ========== 排行榜 + 个人实时排名 ==========
+    const API_ALL = "https://quickform.cn/api/1xtadf78hw/all";
+    async function fetchLeaderboardAndRender() {
+        try {
+            const res = await fetch(API_ALL);
+            if(!res.ok) throw new Error("HTTP error");
+            const json = await res.json();
+            const submissions = json.submissions || [];
+            const answerRecords = submissions.filter(s => s.mode === "answer" && s.classNumber && s.studentName && typeof s.timeSeconds === "number");
+            const groups = { 4: {}, 9: {} };
+            for(let rec of answerRecords) {
+                const sz = rec.size;
+                if(sz !== 4 && sz !== 9) continue;
+                const diff = rec.difficulty;
+                if(!groups[sz][diff]) groups[sz][diff] = [];
+                groups[sz][diff].push(rec);
+            }
+            for(let sz of [4,9]) {
+                for(let diff of ["easy","medium","hard"]) {
+                    if(groups[sz][diff]) {
+                        groups[sz][diff].sort((a,b) => a.timeSeconds - b.timeSeconds);
+                        groups[sz][diff] = groups[sz][diff].slice(0,3);
+                    } else {
+                        groups[sz][diff] = [];
+                    }
+                }
+            }
+            renderLeaderboardHorizontal(groups);
+            // 渲染个人排名卡片
+            renderPersonalRank(answerRecords);
+        } catch(e) { console.error("排行榜加载失败",e); document.getElementById("leaderboardContent").innerHTML = `<div style="text-align:center; width:100%; padding:20px;">排行榜加载失败，请检查网络</div>`; }
+    }
+
+    function renderLeaderboardHorizontal(groups) {
+        const container = document.getElementById("leaderboardContent");
+        const diffNames = { easy:"简易 🌟", medium:"中等 🌟🌟", hard:"困难 🌟🌟🌟" };
+        const difficultyOrder = ["hard", "medium", "easy"];
+        let html = "";
+        for(let sz of [4, 9]) {
+            const sizeLabel = sz === 4 ? "🏆 四宫格 (4x4)" : "🏆 九宫格 (9x9)";
+            html += `<div class="lb-col"><div class="lb-col-title">${sizeLabel}</div>`;
+            for(let diff of difficultyOrder) {
+                const records = groups[sz][diff];
+                html += `<div class="difficulty-group"><div class="difficulty-name">${diffNames[diff]}</div><ul class="rank-list">`;
+                if(records.length === 0) html += `<li class="empty-rank">暂无记录</li>`;
+                else {
+                    records.forEach((rec, idx) => {
+                        const rankIcon = idx === 0 ? "🥇" : (idx === 1 ? "🥈" : "🥉");
+                        const timeStr = rec.formattedTime || formatTime(rec.timeSeconds);
+                        html += `<li><span class="rank-number">${rankIcon}</span><span class="rank-info">${rec.studentName} · ${rec.classNumber}班</span><span class="rank-time">${timeStr}</span></li>`;
+                    });
+                }
+                html += `</ul></div>`;
+            }
+            html += `</div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    // 个人实时排名：根据最后完成的记录(或当前会话答题者)查询其在对应size+难度下的排名
+    function renderPersonalRank(allRecords) {
+        // 优先显示当前会话答题者最后完成的成绩
+        let targetRecord = lastCompletedRecord;
+        // 如果没有刚完成的记录，但有学生信息且已开启过答题模式且未新游戏，可尝试
+        if(!targetRecord && studentClass && studentName) {
+            // 尝试从现有记录中找到该学生最新的一条
+            const matched = allRecords.filter(r => r.classNumber === studentClass && r.studentName === studentName && r.size === currentSize && r.difficulty === currentDifficulty);
+            if(matched.length > 0) {
+                matched.sort((a,b) => new Date(b.completedAt) - new Date(a.completedAt));
+                targetRecord = matched[0];
+            }
+        }
+        if(!targetRecord) {
+            personalRankContent.innerHTML = `<div class="no-data-card">暂无答题记录<br>完成答题模式后自动显示排名</div>`;
+            return;
+        }
+        // 计算该难度下的排名 (时间升序)
+        const sameCategory = allRecords.filter(r => r.size === targetRecord.size && r.difficulty === targetRecord.difficulty);
+        sameCategory.sort((a,b) => a.timeSeconds - b.timeSeconds);
+        const rankIndex = sameCategory.findIndex(r => r.classNumber === targetRecord.classNumber && r.studentName === targetRecord.studentName && r.timeSeconds === targetRecord.timeSeconds);
+        let rank = rankIndex === -1 ? "未上榜" : (rankIndex + 1).toString();
+        let isTop3 = (rank !== "未上榜" && rank <= 3);
+        const diffNameMap = { easy:"简易", medium:"中等", hard:"困难" };
+        const sizeName = targetRecord.size === 4 ? "四宫格" : "九宫格";
+        
+        let gapHtml = "";
+        if(rank !== "未上榜" && rank > 3) {
+            const thirdTime = sameCategory[2] ? sameCategory[2].timeSeconds : null;
+            if(thirdTime && targetRecord.timeSeconds > thirdTime) {
+                const gap = targetRecord.timeSeconds - thirdTime;
+                gapHtml = `<div class="player-detail"><span class="player-label">距前三名</span><span class="player-value">差 ${gap} 秒</span></div>`;
+            }
+        } else if(rank !== "未上榜" && rank <= 3) {
+            gapHtml = `<div class="player-detail"><span class="player-label">🏆 恭喜进入前三</span><span class="player-value">继续加油！</span></div>`;
+        }
+        
+        personalRankContent.innerHTML = `
+            <div class="player-info">
+                <div class="player-detail"><span class="player-label">姓名</span><span class="player-value">${targetRecord.studentName}</span></div>
+                <div class="player-detail"><span class="player-label">班级</span><span class="player-value">${targetRecord.classNumber}班</span></div>
+                <div class="player-detail"><span class="player-label">宫格/难度</span><span class="player-value">${sizeName} · ${diffNameMap[targetRecord.difficulty]}</span></div>
+                <div class="player-detail"><span class="player-label">用时</span><span class="player-value">${targetRecord.formattedTime}</span></div>
+                <div style="text-align:center; margin: 8px 0;">
+                    <span class="rank-badge" style="background:${isTop3 ? '#ffd966' : '#e0e7f0'}">🏅 当前排名: ${rank}</span>
+                </div>
+                ${gapHtml}
+            </div>
+        `;
+    }
+
+    function initEventListeners() {
+        newGameBtn.addEventListener("click", () => { currentSize = parseInt(sizeSelect.value); currentDifficulty = difficultySelect.value; generateNewGame(); lastCompletedRecord = null; });
+        resetBtn.addEventListener("click", () => { if(puzzleMatrix.length) resetCurrentGame(); lastCompletedRecord = null; });
+        checkWinBtn.addEventListener("click", () => { if(checkVictory()) return; modeTipSpan.innerHTML = "🔍 还没有完成，继续加油～"; setTimeout(()=>{ if(!isGameFinished && !isAnswerModeActive) modeTipSpan.innerHTML = "✨ 练习模式：随意填写，不计时 ✨"; else if(!isGameFinished && isAnswerModeActive) modeTipSpan.innerHTML = "⚡ 答题模式进行中，继续挑战"; },1200); });
+        sizeSelect.addEventListener("change", onSettingsChange);
+        difficultySelect.addEventListener("change", onSettingsChange);
+        answerModeBtn.addEventListener("click", () => { if(isGameFinished){ modeTipSpan.innerHTML = "游戏已胜利，请点击「新游戏」重新挑战"; return; } if(isAnswerModeActive) return; showInfoModal(); });
+        window.addEventListener("keydown", onKeyDown);
+        modalConfirmBtn.addEventListener("click", confirmAnswerMode);
+        modalCancelBtn.addEventListener("click", () => { hideModal(); modeTipSpan.innerHTML = "答题模式已取消，仍处于练习模式"; setTimeout(()=>{ if(!isAnswerModeActive && !isGameFinished) modeTipSpan.innerHTML = "✨ 练习模式：随意填写，不计时 ✨"; },1500); });
+        modalOverlay.addEventListener("click", (e) => { if(e.target === modalOverlay) hideModal(); });
+        refreshLeaderboardBtn.addEventListener("click", () => { fetchLeaderboardAndRender(); });
+    }
+
+    function startGame() { currentSize=4; currentDifficulty="medium"; generateNewGame(); initEventListeners(); fetchLeaderboardAndRender(); }
+    startGame();
+</script>
+</body>
+</html>
