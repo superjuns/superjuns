@@ -44,7 +44,7 @@
             letter-spacing: 1px;
         }
 
-        /* 顶部按钮组 - 两行布局 */
+        /* 顶部按钮组 */
         .top-buttons-row {
             display: flex;
             justify-content: center;
@@ -98,75 +98,23 @@
             box-shadow: inset 0 0 0 2px #fff8, inset 0 0 0 5px #ffe5b4, 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* 所有图形样式 */
         .shape {
             display: inline-block;
             box-shadow: 0 4px 6px #0002;
         }
-        .circle {
-            background: #6c5ce7;
-            border-radius: 50%;
-        }
-        .square {
-            background: #fdcb6e;
-            border-radius: 12px;
-        }
-        .triangle {
-            width: 0;
-            height: 0;
-            background: transparent;
-            box-shadow: none;
-        }
-        .star {
-            background: #fd79a8;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-        .heart {
-            background: #ff6b6b;
-            clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
-        }
-        .diamond {
-            background: #4ecdc4;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        }
-        .pentagon {
-            background: #f9ca24;
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-        }
-        .hexagon {
-            background: #48dbfb;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-        }
-        .cloud {
-            background: #dfe6e9;
-            border-radius: 50%;
-            position: relative;
-            box-shadow: none;
-        }
-        .cloud::before, .cloud::after {
-            content: '';
-            position: absolute;
-            background: #dfe6e9;
-            border-radius: 50%;
-        }
-        .cloud::before {
-            width: 70%;
-            height: 70%;
-            top: -35%;
-            left: 10%;
-        }
-        .cloud::after {
-            width: 50%;
-            height: 50%;
-            top: -25%;
-            right: 10%;
-        }
-        .moon {
-            background: #feca57;
-            border-radius: 50%;
-            box-shadow: inset -6px -6px 0 #e1b12c;
-            transform: rotate(20deg);
-        }
+        .circle { background: #6c5ce7; border-radius: 50%; }
+        .square { background: #fdcb6e; border-radius: 12px; }
+        .triangle { width: 0; height: 0; background: transparent; box-shadow: none; }
+        .star { background: #fd79a8; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .heart { background: #ff6b6b; clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"); }
+        .diamond { background: #4ecdc4; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .pentagon { background: #f9ca24; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
+        .hexagon { background: #48dbfb; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
+        .cloud { background: #dfe6e9; border-radius: 50%; position: relative; box-shadow: none; }
+        .cloud::before, .cloud::after { content: ''; position: absolute; background: #dfe6e9; border-radius: 50%; }
+        .cloud::before { width: 70%; height: 70%; top: -35%; left: 10%; }
+        .cloud::after { width: 50%; height: 50%; top: -25%; right: 10%; }
+        .moon { background: #feca57; border-radius: 50%; box-shadow: inset -6px -6px 0 #e1b12c; transform: rotate(20deg); }
 
         .quiz-panel {
             background: #fff0db;
@@ -187,7 +135,6 @@
             padding: 5px 14px;
             border-radius: 40px;
             font-family: monospace;
-            letter-spacing: 1px;
             flex: 1;
             text-align: center;
         }
@@ -200,7 +147,6 @@
             white-space: nowrap;
         }
 
-        /* 数字输入区域 */
         .answer-row {
             display: flex;
             align-items: center;
@@ -218,12 +164,8 @@
             text-align: center;
             color: #e17055;
             min-height: 70px;
-            word-break: break-all;
         }
-        .inline-buttons {
-            display: flex;
-            gap: 10px;
-        }
+        .inline-buttons { display: flex; gap: 10px; }
         .inline-btn {
             border: none;
             border-radius: 50%;
@@ -232,30 +174,16 @@
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.05s linear;
             box-shadow: 0 4px 0 #b0b0b0;
             transform: translateY(-2px);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .inline-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #b0b0b0;
-        }
-        .del-btn {
-            background: #ffaa66;
-            color: white;
-            box-shadow: 0 4px 0 #e08e3a;
-        }
-        .submit-inline {
-            background: #00cec9;
-            color: white;
-            box-shadow: 0 4px 0 #008b8b;
-            border-radius: 56px;
-            width: auto;
-            min-width: 80px;
-        }
+        .inline-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #b0b0b0; }
+        .del-btn { background: #ffaa66; color: white; box-shadow: 0 4px 0 #e08e3a; }
+        .submit-inline { background: #00cec9; color: white; box-shadow: 0 4px 0 #008b8b; border-radius: 56px; width: auto; min-width: 80px; }
+
         .keypad-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -273,17 +201,13 @@
             font-weight: bold;
             color: #2d3436;
             cursor: pointer;
-            transition: 0.05s linear;
             box-shadow: 0 4px 0 #b0b0b0;
             transform: translateY(-2px);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .num-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #b0b0b0;
-        }
+        .num-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #b0b0b0; }
 
         @media (max-width: 550px) {
             .num-btn { width: 48px; height: 48px; font-size: 1.2rem; }
@@ -292,12 +216,6 @@
             .answer-display { font-size: 1.5rem; padding: 10px 12px; min-height: 60px; }
             .keypad-grid { gap: 6px; }
             .top-btn { padding: 8px 18px; }
-        }
-        @media (max-width: 450px) {
-            .num-btn { width: 42px; height: 42px; font-size: 1rem; }
-            .inline-btn { width: 42px; height: 42px; font-size: 0.9rem; }
-            .submit-inline { min-width: 65px; }
-            .answer-display { font-size: 1.3rem; }
         }
 
         .result {
@@ -308,12 +226,11 @@
             padding: 10px 12px;
             background: #fef2e0;
             border-radius: 50px;
-            line-height: 1.3;
         }
         .correct { color: #00b894; background: #e0ffe6; }
         .wrong { color: #d63031; background: #ffe0e0; }
 
-        /* 排行榜区域 - 两行显示前10名 */
+        /* 排行榜区域 */
         .rank-footer {
             margin-top: 20px;
             background: rgba(255, 248, 235, 0.95);
@@ -337,6 +254,25 @@
             align-items: center;
             gap: 4px;
         }
+        .rank-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-icon {
+            background: rgba(150, 150, 150, 0.3);
+            border: none;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: #8b7652;
+            transition: 0.1s;
+        }
+        .admin-icon.active {
+            background: #ffaa66;
+            color: white;
+        }
         .rank-refresh {
             background: transparent;
             border-radius: 30px;
@@ -354,6 +290,7 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 6px;
+            position: relative;
         }
         .rank-card {
             background: white;
@@ -361,16 +298,39 @@
             padding: 6px 4px;
             text-align: center;
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: relative;
         }
         .rank-medal { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
         .rank-name { font-weight: 600; font-size: 0.7rem; color: #3b2c1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .rank-class { font-size: 0.6rem; color: #a67c42; margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .rank-correct { font-size: 0.6rem; font-weight: 600; color: #2b7e3a; background: #eef5ea; display: inline-block; padding: 1px 4px; border-radius: 20px; margin-top: 2px; }
         .rank-time { font-size: 0.55rem; color: #d97706; margin-top: 2px; }
+        .edit-icon, .delete-icon {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: 0.1s;
+        }
+        .edit-icon {
+            top: -8px;
+            right: -8px;
+            background: #1e88e5;
+            color: white;
+        }
+        .delete-icon {
+            bottom: -8px;
+            right: -8px;
+            background: #ef5350;
+            color: white;
+        }
+        .edit-icon:active, .delete-icon:active { transform: scale(0.9); }
         .rank-empty { grid-column: 1 / -1; text-align: center; padding: 16px; font-size: 0.75rem; color: #b9a77a; }
 
         .my-rank-card {
@@ -379,63 +339,38 @@
             border-radius: 28px;
             padding: 12px 16px;
             border-left: 5px solid #ff8c5a;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .my-rank-title {
-            font-size: 0.75rem;
-            color: #c9975a;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .my-rank-title { font-size: 0.75rem; color: #c9975a; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .my-rank-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .my-info { display: flex; flex-direction: column; text-align: left; }
+        .my-name { font-weight: 700; font-size: 1rem; color: #e67e22; }
+        .my-class { font-size: 0.7rem; color: #a67c42; }
+        .my-stats { display: flex; gap: 12px; background: white; padding: 6px 14px; border-radius: 40px; }
+        .my-stats span { font-size: 0.7rem; font-weight: 600; }
+        .my-rank { background: #ff8c5a; color: white; padding: 6px 16px; border-radius: 40px; font-weight: bold; font-size: 0.8rem; }
+        .no-score { color: #b9a77a; font-style: italic; font-size: 0.75rem; }
+
+        /* 同步按钮栏 */
+        .sync-bar {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            justify-content: flex-end;
+            margin-top: 12px;
         }
-        .my-rank-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .my-info {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-        .my-name {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #e67e22;
-        }
-        .my-class {
-            font-size: 0.7rem;
-            color: #a67c42;
-        }
-        .my-stats {
-            display: flex;
-            gap: 12px;
-            background: white;
-            padding: 6px 14px;
-            border-radius: 40px;
-        }
-        .my-stats span {
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .my-rank {
-            background: #ff8c5a;
+        .sync-btn {
+            background: #1e88e5;
             color: white;
+            border: none;
             padding: 6px 16px;
             border-radius: 40px;
-            font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: 500;
         }
-        .no-score {
-            color: #b9a77a;
-            font-style: italic;
-            font-size: 0.75rem;
+        .sync-btn:active {
+            background: #1565c0;
         }
 
+        /* 模态框 */
         .modal {
             display: none;
             position: fixed;
@@ -497,6 +432,9 @@
             box-shadow: 0 4px 0 #6c5ce7;
             cursor: pointer;
         }
+
+        .admin-modal .modal-content { max-width: 300px; }
+        .admin-modal input { text-align: center; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -530,11 +468,13 @@
 
     <div class="result" id="result"></div>
 
-    <!-- 排行榜区块：两行显示前10名（已过滤“安”和“桥”） -->
     <div class="rank-footer" id="rankFooter">
         <div class="rank-header">
-            <div class="rank-title"><i class="fas fa-trophy"></i> 学霸榜 · 前10名（每人最好成绩）</div>
-            <div class="rank-refresh" id="rankRefreshBtn"><i class="fas fa-sync-alt"></i> 刷新</div>
+            <div class="rank-title"><i class="fas fa-trophy"></i> 学霸榜 · 前10名</div>
+            <div class="rank-right">
+                <button class="admin-icon" id="adminIconBtn">🔧</button>
+                <button class="rank-refresh" id="rankRefreshBtn"><i class="fas fa-sync-alt"></i> 刷新</button>
+            </div>
         </div>
         <div class="rank-rows" id="rankRows">
             <div class="rank-row" id="rankRow1"></div>
@@ -542,7 +482,10 @@
         </div>
     </div>
 
-    <!-- 我的成绩卡片 - 常驻显示 -->
+    <div class="sync-bar" id="syncBar" style="display: none;">
+        <button class="sync-btn" id="syncBtn"><i class="fas fa-save"></i> 同步修改</button>
+    </div>
+
     <div class="my-rank-card" id="myRankCard">
         <div class="my-rank-title"><i class="fas fa-user-graduate"></i> 我的成绩（最好记录）</div>
         <div class="my-rank-content" id="myRankContent">
@@ -551,7 +494,7 @@
     </div>
 </div>
 
-<!-- 模态框 -->
+<!-- 信息录入模态框 -->
 <div id="infoModal" class="modal">
     <div class="modal-content">
         <button class="close-modal" id="closeModalBtn">×</button>
@@ -574,6 +517,45 @@
     </div>
 </div>
 
+<!-- 管理员密码模态框 -->
+<div id="adminModal" class="modal admin-modal">
+    <div class="modal-content">
+        <button class="close-modal" id="closeAdminModalBtn">×</button>
+        <h3>🔐 管理员验证</h3>
+        <div class="modal-field">
+            <label>🔑 密码：</label>
+            <input type="password" id="adminPassword" placeholder="请输入管理员密码" autocomplete="off">
+        </div>
+        <div class="modal-buttons">
+            <button id="confirmAdminBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑学生模态框 -->
+<div id="editStudentModal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" id="closeEditModalBtn">×</button>
+        <h3>✏️ 编辑学生信息</h3>
+        <div class="modal-field">
+            <label>📚 班级：</label>
+            <select id="editClassSelect">
+                <option value="1班">1班</option><option value="2班">2班</option>
+                <option value="3班">3班</option><option value="4班">4班</option>
+                <option value="5班">5班</option><option value="6班">6班</option>
+                <option value="7班">7班</option>
+            </select>
+        </div>
+        <div class="modal-field">
+            <label>👧 姓名：</label>
+            <input type="text" id="editStudentNameInput" placeholder="学生姓名" maxlength="20">
+        </div>
+        <div class="modal-buttons">
+            <button id="saveEditStudentBtn">保存修改</button>
+        </div>
+    </div>
+</div>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <script>
@@ -581,7 +563,6 @@
     let totalShapes = 0;
     let currentShape = '';
     let colsPerRow = 5;
-    // 扩充图形种类
     let shapeTypes = [
         'circle', 'triangle', 'square', 'star',
         'heart', 'diamond', 'pentagon', 'hexagon', 'cloud', 'moon'
@@ -599,24 +580,21 @@
     let studentClass = '';
     let studentName = '';
     let lastMyScore = { correct: 0, totalTime: 0 };
-    
     let currentAnswer = '';
     
-    const shapesBox = document.getElementById('shapesBox');
-    const answerDisplay = document.getElementById('answerDisplay');
-    const resultDiv = document.getElementById('result');
-    const timerDiv = document.getElementById('timer');
-    const quizPanel = document.getElementById('quizPanel');
-    const quizProgressSpan = document.getElementById('quizProgress');
-    const infoModal = document.getElementById('infoModal');
-    const classSelect = document.getElementById('classSelect');
-    const studentNameInput = document.getElementById('studentName');
-    const confirmQuizBtn = document.getElementById('confirmQuizBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const myRankCard = document.getElementById('myRankCard');
-    const myRankContent = document.getElementById('myRankContent');
+    // 管理员模式
+    let isAdminMode = false;
+    let currentEditingStudent = null;
+    // 存储永久删除/编辑的记录
+    let deletedRecords = new Set();  // 存储 "班级|姓名" 的删除记录
+    let editedRecords = new Map();   // 存储 "原班级|原姓名" -> { className, studentName }
+    
+    // 排行榜数据
+    let currentRankingList = [];
+    const RANK_API_URL = 'https://quickform.cn/api/zdtp3mphzo/all';
+    let rankRefreshInterval = null;
 
-    // 生成数字键盘
+    // 图形相关函数
     function buildKeypad() {
         const grid = document.getElementById('keypadGrid');
         if (!grid) return;
@@ -643,35 +621,22 @@
         updateAnswerDisplay();
     }
 
-    function clearAnswer() {
-        currentAnswer = '';
-        updateAnswerDisplay();
-    }
+    function clearAnswer() { currentAnswer = ''; updateAnswerDisplay(); }
+    function updateAnswerDisplay() { answerDisplay.textContent = currentAnswer === '' ? '?' : currentAnswer; }
+    function getCurrentNumber() { return currentAnswer === '' ? NaN : parseInt(currentAnswer, 10); }
 
-    function updateAnswerDisplay() {
-        answerDisplay.textContent = currentAnswer === '' ? '?' : currentAnswer;
-    }
-
-    function getCurrentNumber() {
-        if (currentAnswer === '') return NaN;
-        return parseInt(currentAnswer, 10);
-    }
-
-    // 图形尺寸动态调整
     function getDynamicSize() {
-        let size = 44;
-        let gap = 12;
+        let size = 44, gap = 12;
         if (colsPerRow === 10) { size = 28; gap = 5; }
         else if (colsPerRow === 5) { size = 42; gap = 10; }
         else if (colsPerRow === 2) { size = 32; gap = 6; }
-        const screenWidth = window.innerWidth;
-        if (colsPerRow === 10 && screenWidth < 380) { size = 24; gap = 4; }
-        else if (colsPerRow === 5 && screenWidth < 380) { size = 36; gap = 8; }
-        else if (colsPerRow === 2 && screenWidth < 400) { size = 28; gap = 5; }
+        const sw = window.innerWidth;
+        if (colsPerRow === 10 && sw < 380) { size = 24; gap = 4; }
+        else if (colsPerRow === 5 && sw < 380) { size = 36; gap = 8; }
+        else if (colsPerRow === 2 && sw < 400) { size = 28; gap = 5; }
         return { size, gap };
     }
 
-    // 创建单个图形元素
     function createShapeElement(shapeType, size) {
         const div = document.createElement('div');
         div.classList.add('shape', shapeType);
@@ -708,7 +673,6 @@
         }
     }
 
-    // 图形数量范围 3-50
     function generateRandomGame() {
         totalShapes = Math.floor(Math.random() * 48) + 3;
         const randomIndex = Math.floor(Math.random() * shapeTypes.length);
@@ -750,19 +714,7 @@
         }, 1000);
     }
 
-    // ========= 排行榜：每个学生只保留最好成绩，过滤姓名为“安”或“桥”的记录 =========
-    const RANK_API_URL = 'https://quickform.cn/api/zdtp3mphzo/all';
-    let rankRefreshInterval = null;
-    let currentRankingList = [];
-
-    // 判断是否需要过滤掉该学生（姓名包含“安”或“桥”）
-    function shouldFilterOut(studentName) {
-        if (!studentName) return false;
-        // 精确匹配：姓名为“安”或“桥”，或者包含“安”/“桥”（根据需求，删除名字是“安”和“桥”的数据）
-        // 这里使用精确匹配（全名等于“安”或“桥”），如果需求是包含关系可调整
-        return studentName === '安' || studentName === '桥';
-    }
-
+    // ========== 排行榜核心（支持永久删除/编辑） ==========
     async function fetchRankingData() {
         try {
             const controller = new AbortController();
@@ -776,33 +728,37 @@
             submissions.forEach(sub => {
                 const className = sub.className || '未知';
                 const studentName = sub.studentName || '匿名';
-                // 过滤掉名字为“安”或“桥”的记录
-                if (shouldFilterOut(studentName)) return;
                 const key = `${className}|${studentName}`;
+                if (deletedRecords.has(key)) return;
+                let finalClassName = className;
+                let finalStudentName = studentName;
+                if (editedRecords.has(key)) {
+                    const edit = editedRecords.get(key);
+                    finalClassName = edit.className;
+                    finalStudentName = edit.studentName;
+                }
+                const finalKey = `${finalClassName}|${finalStudentName}`;
                 const correct = sub.correctAnswers || 0;
                 const totalTime = sub.totalTimeSeconds || 0;
-                if (!studentBestMap.has(key)) {
-                    studentBestMap.set(key, { className, studentName, correct, totalTime });
+                if (!studentBestMap.has(finalKey)) {
+                    studentBestMap.set(finalKey, { className: finalClassName, studentName: finalStudentName, correct, totalTime });
                 } else {
-                    const existing = studentBestMap.get(key);
+                    const existing = studentBestMap.get(finalKey);
                     if (correct > existing.correct || (correct === existing.correct && totalTime < existing.totalTime)) {
-                        studentBestMap.set(key, { className, studentName, correct, totalTime });
+                        studentBestMap.set(finalKey, { className: finalClassName, studentName: finalStudentName, correct, totalTime });
                     }
                 }
             });
-            const rankList = Array.from(studentBestMap.values()).sort((a, b) => {
+            return Array.from(studentBestMap.values()).sort((a, b) => {
                 if (a.correct !== b.correct) return b.correct - a.correct;
                 return a.totalTime - b.totalTime;
             });
-            currentRankingList = rankList;
-            return rankList;
         } catch (err) {
             console.warn('排行榜获取失败', err);
             return [];
         }
     }
 
-    // 渲染排行榜：两行，第一行1-5名，第二行6-10名
     function renderRankingRows(rankList) {
         const row1Container = document.getElementById('rankRow1');
         const row2Container = document.getElementById('rankRow2');
@@ -823,13 +779,15 @@
             row1Container.innerHTML = top5.map((item, idx) => {
                 const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}`));
                 const displayName = item.studentName.length > 8 ? item.studentName.slice(0,6)+'..' : item.studentName;
+                const originalKey = `${item.className}|${item.studentName}`;
                 return `
-                    <div class="rank-card">
+                    <div class="rank-card" data-original-key="${originalKey}" data-class="${item.className}" data-name="${item.studentName}" data-correct="${item.correct}" data-time="${item.totalTime}">
                         <div class="rank-medal">${medal}</div>
                         <div class="rank-name" title="${item.studentName}">${displayName}</div>
                         <div class="rank-class">${item.className}</div>
                         <div class="rank-correct">✅ ${item.correct}/5</div>
                         <div class="rank-time">⏱️ ${item.totalTime}s</div>
+                        ${isAdminMode ? `<div class="edit-icon">✏️</div><div class="delete-icon">🗑️</div>` : ''}
                     </div>
                 `;
             }).join('');
@@ -840,48 +798,97 @@
         } else {
             row2Container.innerHTML = next5.map((item, idx) => {
                 const rankNum = idx + 6;
-                const medal = `${rankNum}`;
                 const displayName = item.studentName.length > 8 ? item.studentName.slice(0,6)+'..' : item.studentName;
+                const originalKey = `${item.className}|${item.studentName}`;
                 return `
-                    <div class="rank-card">
-                        <div class="rank-medal">${medal}</div>
+                    <div class="rank-card" data-original-key="${originalKey}" data-class="${item.className}" data-name="${item.studentName}" data-correct="${item.correct}" data-time="${item.totalTime}">
+                        <div class="rank-medal">${rankNum}</div>
                         <div class="rank-name" title="${item.studentName}">${displayName}</div>
                         <div class="rank-class">${item.className}</div>
                         <div class="rank-correct">✅ ${item.correct}/5</div>
                         <div class="rank-time">⏱️ ${item.totalTime}s</div>
+                        ${isAdminMode ? `<div class="edit-icon">✏️</div><div class="delete-icon">🗑️</div>` : ''}
                     </div>
                 `;
             }).join('');
         }
+        
+        if (isAdminMode) {
+            document.querySelectorAll('.rank-card .edit-icon').forEach(icon => {
+                const card = icon.closest('.rank-card');
+                if (card) {
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const originalKey = card.getAttribute('data-original-key');
+                        const className = card.getAttribute('data-class');
+                        const studentName = card.getAttribute('data-name');
+                        openEditStudentModal(originalKey, className, studentName);
+                    });
+                }
+            });
+            document.querySelectorAll('.rank-card .delete-icon').forEach(icon => {
+                const card = icon.closest('.rank-card');
+                if (card) {
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const originalKey = card.getAttribute('data-original-key');
+                        const className = card.getAttribute('data-class');
+                        const studentName = card.getAttribute('data-name');
+                        if (confirm(`确定要永久删除 ${studentName} (${className}) 的所有记录吗？`)) {
+                            deletedRecords.add(originalKey);
+                            if (editedRecords.has(originalKey)) editedRecords.delete(originalKey);
+                            applyFiltersAndRender();
+                        }
+                    });
+                }
+            });
+        }
     }
-
-    async function fetchAndUpdateRanking() {
+    
+    function openEditStudentModal(originalKey, className, studentName) {
+        currentEditingStudent = { originalKey, className, studentName };
+        editClassSelect.value = className;
+        editStudentNameInput.value = studentName;
+        editStudentModal.style.display = 'flex';
+    }
+    
+    function saveEditStudent() {
+        if (!currentEditingStudent) return;
+        const newClassName = editClassSelect.value;
+        const newStudentName = editStudentNameInput.value.trim();
+        if (newStudentName === "") {
+            alert("请输入姓名");
+            return;
+        }
+        const originalKey = currentEditingStudent.originalKey;
+        const newKey = `${newClassName}|${newStudentName}`;
+        if (originalKey !== newKey) {
+            editedRecords.set(originalKey, { className: newClassName, studentName: newStudentName });
+            if (deletedRecords.has(originalKey)) deletedRecords.delete(originalKey);
+        }
+        editStudentModal.style.display = 'none';
+        currentEditingStudent = null;
+        applyFiltersAndRender();
+    }
+    
+    async function applyFiltersAndRender() {
         const rankList = await fetchRankingData();
+        currentRankingList = rankList;
         renderRankingRows(rankList);
         await updateMyRankCard();
     }
-
-    // 更新我的成绩卡片
+    
     async function updateMyRankCard() {
         if (!studentName || !studentClass) {
             myRankContent.innerHTML = `<div class="no-score">✨ 暂无成绩，快去答题模式挑战吧 ✨</div>`;
             return;
         }
-        // 如果当前玩家是被过滤的名字，则显示提示
-        if (shouldFilterOut(studentName)) {
-            myRankContent.innerHTML = `<div class="no-score">📝 该账号已被管理员隐藏，不参与排行榜</div>`;
-            return;
-        }
-        let rankList = currentRankingList;
-        if (rankList.length === 0) {
-            rankList = await fetchRankingData();
-        }
-        const myKey = `${studentClass}|${studentName}`;
+        let rankList = await fetchRankingData();
         let myRank = null;
         let myScore = null;
         for (let i = 0; i < rankList.length; i++) {
             const item = rankList[i];
-            if (`${item.className}|${item.studentName}` === myKey) {
+            if (item.className === studentClass && item.studentName === studentName) {
                 myRank = i + 1;
                 myScore = item;
                 break;
@@ -905,25 +912,51 @@
         }
     }
 
+    async function fetchAndUpdateRanking() {
+        await applyFiltersAndRender();
+    }
+
+    // 自动刷新间隔改为 5 秒 (5000 毫秒)
     function startRankAutoRefresh() {
         fetchAndUpdateRanking();
         if (rankRefreshInterval) clearInterval(rankRefreshInterval);
         rankRefreshInterval = setInterval(() => {
             fetchAndUpdateRanking();
-        }, 20000);
+        }, 5000);
+    }
+
+    // 同步修改（保存到本地存储，永久生效）
+    function syncChanges() {
+        const syncData = {
+            deletedRecords: Array.from(deletedRecords),
+            editedRecords: Array.from(editedRecords.entries())
+        };
+        localStorage.setItem('adminSyncData', JSON.stringify(syncData));
+        resultDiv.innerHTML = '✅ 修改已同步！删除的学生将永久不再显示';
+        resultDiv.className = 'result correct';
+        setTimeout(() => { if (resultDiv.innerHTML === '✅ 修改已同步！删除的学生将永久不再显示') resultDiv.innerHTML = ''; }, 3000);
+        applyFiltersAndRender();
+    }
+    
+    function loadSyncData() {
+        const saved = localStorage.getItem('adminSyncData');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                deletedRecords.clear();
+                editedRecords.clear();
+                data.deletedRecords.forEach(key => deletedRecords.add(key));
+                if (data.editedRecords) {
+                    data.editedRecords.forEach(([key, value]) => editedRecords.set(key, value));
+                }
+            } catch(e) { console.warn('加载同步数据失败', e); }
+        }
     }
 
     // 数据上报
     async function sendQuizResult(totalSeconds) {
         if (dataSent) return;
         if (!studentClass || !studentName) return;
-        // 如果玩家是被过滤的名字，不上报成绩
-        if (shouldFilterOut(studentName)) {
-            resultDiv.innerHTML = '⚠️ 该账号已被限制，无法记录成绩';
-            resultDiv.className = 'result wrong';
-            dataSent = true;
-            return;
-        }
         const payload = {
             className: studentClass,
             studentName: studentName,
@@ -949,10 +982,6 @@
     // 答题模式流程
     function startQuizModeInternal() {
         if (isQuizMode) return;
-        if (shouldFilterOut(studentName)) {
-            alert('该账号已被管理员隐藏，无法进行答题模式');
-            return;
-        }
         isQuizMode = true;
         quizCount = 0;
         correctCount = 0;
@@ -1059,10 +1088,6 @@
         let className = classSelect.value;
         let name = studentNameInput.value.trim();
         if (name === "") { alert("请填写姓名 ✏️"); return; }
-        if (shouldFilterOut(name)) {
-            alert("该姓名已被管理员限制，无法参与答题模式");
-            return;
-        }
         studentClass = className + "班";
         studentName = name;
         closeModal();
@@ -1091,10 +1116,8 @@
         setTimeout(() => {
             if (resultDiv.innerHTML === '✨ 新的一轮，加油哟 ✨') resultDiv.innerHTML = '';
         }, 1500);
-        if (studentName && studentClass && !shouldFilterOut(studentName)) {
+        if (studentName && studentClass) {
             updateMyRankCard();
-        } else {
-            myRankContent.innerHTML = `<div class="no-score">✨ 暂无成绩，快去答题模式挑战吧 ✨</div>`;
         }
     }
 
@@ -1111,6 +1134,54 @@
         }, 1000);
     }
 
+    // 管理员模式开关
+    function toggleAdminMode() {
+        if (isAdminMode) {
+            exitAdminMode();
+        } else {
+            showAdminModal();
+        }
+    }
+    
+    function exitAdminMode() {
+        isAdminMode = false;
+        document.getElementById('adminIconBtn').classList.remove('active');
+        syncBar.style.display = 'none';
+        resultDiv.innerHTML = '🔧 已退出管理员模式';
+        resultDiv.className = 'result correct';
+        setTimeout(() => resultDiv.innerHTML = '', 2000);
+        applyFiltersAndRender(); // 刷新榜单，隐藏编辑/删除按钮
+    }
+    
+    function enterAdminMode() {
+        isAdminMode = true;
+        document.getElementById('adminIconBtn').classList.add('active');
+        syncBar.style.display = 'block';
+        resultDiv.innerHTML = '🔧 管理员模式已开启，点击✏️编辑，🗑️删除，完成后点击同步';
+        resultDiv.className = 'result correct';
+        setTimeout(() => resultDiv.innerHTML = '', 3000);
+        applyFiltersAndRender(); // 重新渲染，显示编辑/删除按钮
+    }
+    
+    function checkAdminPassword() {
+        const pwd = adminPassword.value.trim();
+        if (pwd === 'ssxx050505') {
+            closeAdminModal();
+            enterAdminMode();
+        } else {
+            alert('密码错误，无法进入管理员模式');
+        }
+        adminPassword.value = '';
+    }
+    
+    function showAdminModal() {
+        adminModal.style.display = 'flex';
+    }
+    function closeAdminModal() {
+        adminModal.style.display = 'none';
+        adminPassword.value = '';
+    }
+
     let resizeTimer;
     window.addEventListener('resize', () => {
         if (resizeTimer) clearTimeout(resizeTimer);
@@ -1118,16 +1189,24 @@
     });
 
     document.getElementById('rankRefreshBtn')?.addEventListener('click', () => {
-        fetchAndUpdateRanking();
+        applyFiltersAndRender();
     });
     confirmQuizBtn.addEventListener('click', confirmAndStart);
     closeModalBtn.addEventListener('click', closeModal);
     infoModal.addEventListener('click', (e) => { if (e.target === infoModal) closeModal(); });
-
+    document.getElementById('adminIconBtn').addEventListener('click', toggleAdminMode);
+    confirmAdminBtn.addEventListener('click', checkAdminPassword);
+    closeAdminModalBtn.addEventListener('click', closeAdminModal);
+    adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdminModal(); });
     document.getElementById('delBtn')?.addEventListener('click', deleteDigit);
     document.getElementById('submitInlineBtn')?.addEventListener('click', checkAnswer);
+    syncBtn.addEventListener('click', syncChanges);
+    saveEditStudentBtn.addEventListener('click', saveEditStudent);
+    closeEditModalBtn.addEventListener('click', () => { editStudentModal.style.display = 'none'; currentEditingStudent = null; });
+    editStudentModal.addEventListener('click', (e) => { if (e.target === editStudentModal) { editStudentModal.style.display = 'none'; currentEditingStudent = null; } });
 
     window.onload = () => {
+        loadSyncData();
         buildKeypad();
         colsPerRow = 5;
         generateRandomGame();
