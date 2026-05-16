@@ -98,7 +98,7 @@
             box-shadow: inset 0 0 0 2px #fff8, inset 0 0 0 5px #ffe5b4, 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* ========== 所有图形样式 ========== */
+        /* 所有图形样式 */
         .shape {
             display: inline-block;
             box-shadow: 0 4px 6px #0002;
@@ -121,7 +121,6 @@
             background: #fd79a8;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
         }
-        /* 新增图形 */
         .heart {
             background: #ff6b6b;
             clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
@@ -144,8 +143,7 @@
             position: relative;
             box-shadow: none;
         }
-        .cloud::before,
-        .cloud::after {
+        .cloud::before, .cloud::after {
             content: '';
             position: absolute;
             background: #dfe6e9;
@@ -287,7 +285,6 @@
             box-shadow: 0 1px 0 #b0b0b0;
         }
 
-        /* 手机小屏适配 */
         @media (max-width: 550px) {
             .num-btn { width: 48px; height: 48px; font-size: 1.2rem; }
             .inline-btn { width: 48px; height: 48px; font-size: 1rem; }
@@ -348,7 +345,6 @@
             cursor: pointer;
             color: #b38f5a;
         }
-        /* 两行容器 */
         .rank-rows {
             display: flex;
             flex-direction: column;
@@ -377,7 +373,6 @@
         .rank-time { font-size: 0.55rem; color: #d97706; margin-top: 2px; }
         .rank-empty { grid-column: 1 / -1; text-align: center; padding: 16px; font-size: 0.75rem; color: #b9a77a; }
 
-        /* 玩家实时排名卡片 - 常驻显示 */
         .my-rank-card {
             margin-top: 12px;
             background: linear-gradient(135deg, #fff5e6, #fff0e0);
@@ -441,7 +436,6 @@
             font-size: 0.75rem;
         }
 
-        /* 模态框 */
         .modal {
             display: none;
             position: fixed;
@@ -536,7 +530,7 @@
 
     <div class="result" id="result"></div>
 
-    <!-- 排行榜区块：两行显示前10名 -->
+    <!-- 排行榜区块：两行显示前10名（已过滤“安”和“桥”） -->
     <div class="rank-footer" id="rankFooter">
         <div class="rank-header">
             <div class="rank-title"><i class="fas fa-trophy"></i> 学霸榜 · 前10名（每人最好成绩）</div>
@@ -548,7 +542,7 @@
         </div>
     </div>
 
-    <!-- 我的成绩卡片 - 常驻显示（即使没有成绩也显示） -->
+    <!-- 我的成绩卡片 - 常驻显示 -->
     <div class="my-rank-card" id="myRankCard">
         <div class="my-rank-title"><i class="fas fa-user-graduate"></i> 我的成绩（最好记录）</div>
         <div class="my-rank-content" id="myRankContent">
@@ -587,7 +581,7 @@
     let totalShapes = 0;
     let currentShape = '';
     let colsPerRow = 5;
-    // 扩充图形种类：原有4种 + 新增6种 = 10种
+    // 扩充图形种类
     let shapeTypes = [
         'circle', 'triangle', 'square', 'star',
         'heart', 'diamond', 'pentagon', 'hexagon', 'cloud', 'moon'
@@ -677,16 +671,14 @@
         return { size, gap };
     }
 
-    // 创建单个图形元素（支持所有图形类型）
+    // 创建单个图形元素
     function createShapeElement(shapeType, size) {
         const div = document.createElement('div');
         div.classList.add('shape', shapeType);
-        // 非三角形需要设置宽高
         if (shapeType !== 'triangle') {
             div.style.width = `${size}px`;
             div.style.height = `${size}px`;
         }
-        // 三角形特殊处理
         if (shapeType === 'triangle') {
             div.style.width = '0';
             div.style.height = '0';
@@ -696,7 +688,6 @@
             div.style.background = 'transparent';
             div.style.boxShadow = 'none';
         }
-        // 月亮特殊处理（阴影）
         if (shapeType === 'moon') {
             div.style.background = '#feca57';
             div.style.borderRadius = '50%';
@@ -759,10 +750,18 @@
         }, 1000);
     }
 
-    // ========= 排行榜：每个学生只保留最好成绩，显示前10名分两行 =========
+    // ========= 排行榜：每个学生只保留最好成绩，过滤姓名为“安”或“桥”的记录 =========
     const RANK_API_URL = 'https://quickform.cn/api/zdtp3mphzo/all';
     let rankRefreshInterval = null;
     let currentRankingList = [];
+
+    // 判断是否需要过滤掉该学生（姓名包含“安”或“桥”）
+    function shouldFilterOut(studentName) {
+        if (!studentName) return false;
+        // 精确匹配：姓名为“安”或“桥”，或者包含“安”/“桥”（根据需求，删除名字是“安”和“桥”的数据）
+        // 这里使用精确匹配（全名等于“安”或“桥”），如果需求是包含关系可调整
+        return studentName === '安' || studentName === '桥';
+    }
 
     async function fetchRankingData() {
         try {
@@ -777,6 +776,8 @@
             submissions.forEach(sub => {
                 const className = sub.className || '未知';
                 const studentName = sub.studentName || '匿名';
+                // 过滤掉名字为“安”或“桥”的记录
+                if (shouldFilterOut(studentName)) return;
                 const key = `${className}|${studentName}`;
                 const correct = sub.correctAnswers || 0;
                 const totalTime = sub.totalTimeSeconds || 0;
@@ -816,7 +817,6 @@
         const top5 = rankList.slice(0, 5);
         const next5 = rankList.slice(5, 10);
         
-        // 渲染第一行（1-5名）
         if (top5.length === 0) {
             row1Container.innerHTML = '<div class="rank-empty">暂无数据</div>';
         } else {
@@ -835,7 +835,6 @@
             }).join('');
         }
         
-        // 渲染第二行（6-10名）
         if (next5.length === 0) {
             row2Container.innerHTML = '<div class="rank-empty">暂无更多数据</div>';
         } else {
@@ -866,6 +865,11 @@
     async function updateMyRankCard() {
         if (!studentName || !studentClass) {
             myRankContent.innerHTML = `<div class="no-score">✨ 暂无成绩，快去答题模式挑战吧 ✨</div>`;
+            return;
+        }
+        // 如果当前玩家是被过滤的名字，则显示提示
+        if (shouldFilterOut(studentName)) {
+            myRankContent.innerHTML = `<div class="no-score">📝 该账号已被管理员隐藏，不参与排行榜</div>`;
             return;
         }
         let rankList = currentRankingList;
@@ -913,6 +917,13 @@
     async function sendQuizResult(totalSeconds) {
         if (dataSent) return;
         if (!studentClass || !studentName) return;
+        // 如果玩家是被过滤的名字，不上报成绩
+        if (shouldFilterOut(studentName)) {
+            resultDiv.innerHTML = '⚠️ 该账号已被限制，无法记录成绩';
+            resultDiv.className = 'result wrong';
+            dataSent = true;
+            return;
+        }
         const payload = {
             className: studentClass,
             studentName: studentName,
@@ -938,6 +949,10 @@
     // 答题模式流程
     function startQuizModeInternal() {
         if (isQuizMode) return;
+        if (shouldFilterOut(studentName)) {
+            alert('该账号已被管理员隐藏，无法进行答题模式');
+            return;
+        }
         isQuizMode = true;
         quizCount = 0;
         correctCount = 0;
@@ -1044,6 +1059,10 @@
         let className = classSelect.value;
         let name = studentNameInput.value.trim();
         if (name === "") { alert("请填写姓名 ✏️"); return; }
+        if (shouldFilterOut(name)) {
+            alert("该姓名已被管理员限制，无法参与答题模式");
+            return;
+        }
         studentClass = className + "班";
         studentName = name;
         closeModal();
@@ -1072,8 +1091,10 @@
         setTimeout(() => {
             if (resultDiv.innerHTML === '✨ 新的一轮，加油哟 ✨') resultDiv.innerHTML = '';
         }, 1500);
-        if (studentName && studentClass) {
+        if (studentName && studentClass && !shouldFilterOut(studentName)) {
             updateMyRankCard();
+        } else {
+            myRankContent.innerHTML = `<div class="no-score">✨ 暂无成绩，快去答题模式挑战吧 ✨</div>`;
         }
     }
 
